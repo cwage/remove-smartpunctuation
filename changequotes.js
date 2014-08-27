@@ -25,12 +25,10 @@ function processNode(node) {
   }
 }
 
-
-
 function updatePunctuation() {
   var nodes = getAllTextNodes()
   if (nodes.length == 0) {
-    alert('Could not locate editor in this page.');
+    alert('Couldn\'t find any text nodes. This is probably a bug.');
     return;
   }
 
@@ -38,11 +36,6 @@ function updatePunctuation() {
     processNode(nodes[i]);
   }
 }
-
-function getEditableFromIframe(iframe) {
-  return iframe.contentDocument.querySelector('[contentEditable]');
-}
-
 
 function getAllTextNodes(){
   var result = [];
