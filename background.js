@@ -1,13 +1,20 @@
-function onTabEvent(tabId) {
-  chrome.tabs.get(tabId, function(tab) {
-      chrome.pageAction.show(tab.id);
-  });
-}
+// Service worker setup
+chrome.action.onClicked.addListener(async (tab) => {
+  try {
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      files: ['changequotes.js']
+    });
+  } catch (err) {
+    console.error('Failed to execute script:', err);
+  }
+});
 
-function onPageActionClick(tab) {
-  chrome.tabs.executeScript(tab.id, {'file': 'changequotes.js'});
-}
-
-chrome.tabs.onUpdated.addListener(onTabEvent);
-chrome.tabs.onActiveChanged.addListener(onTabEvent);
-chrome.pageAction.onClicked.addListener(onPageActionClick);
+// Show action button for all supported pages
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (tab.url?.startsWith('http')) {
+    chrome.action.enable(tabId);
+  } else {
+    chrome.action.disable(tabId);
+  }
+});
